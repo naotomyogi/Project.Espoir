@@ -8,7 +8,7 @@ services:
       - "80:80"
     volumes:
       - "./src/php:/var/www/html"
-      - "./work:/work"
+      # - "./work:/work"
       - "vendor:/var/www/html/vendor"
   php:
     container_name: "laravel"
@@ -20,7 +20,7 @@ services:
     volumes:
       - "./src/php:/var/www/html"
       - "vendor:/var/www/html/vendor"
-      - "./work:/work"
+      # - "./work:/work"
   #  python:
   #    container_name: "python"
   #    build:
@@ -30,21 +30,21 @@ services:
   #    volumes:
   #      - "./src/python:/app"
   #      - "./work:/work"
-  db1:
-    container_name: "postgres"
-    image: postgres:14-alpine
-    restart: always
-    shm_size: 256mb
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-    volumes:
-      - "./db1:/var/lib/postgresql/data"
-      - "./work:/work"
-    environment:
-      - "POSTGRES_HOST_AUTH_METHOD=${POSTGRES_HOST_AUTH_METHOD}"
-      - "POSTGRES_USER=${POSTGRES_USER}"
-      - "POSTGRES_DB=${POSTGRES_DB}"
-      - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+  # db1:
+  #   container_name: "postgres"
+  #   image: postgres:14-alpine
+  #   restart: always
+  #   shm_size: 256mb
+  #   healthcheck:
+  #     test: ["CMD", "pg_isready", "-U", "postgres"]
+  #   volumes:
+  #     - "./db1:/var/lib/postgresql/data"
+  #     - "./work:/work"
+  #   environment:
+  #     - "POSTGRES_HOST_AUTH_METHOD=${POSTGRES_HOST_AUTH_METHOD}"
+  #     - "POSTGRES_USER=${POSTGRES_USER}"
+  #     - "POSTGRES_DB=${POSTGRES_DB}"
+  #     - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
   db2:
     container_name: "mysql"
     image: mysql:8.0
@@ -59,32 +59,32 @@ services:
       - "TZ='Asia/Tokyo'"
     volumes:
       - "./db2:/var/lib/mysql"
-      - "./work:/work"
+      # - "./work:/work"
     # MySQL8.0ではデフォルトが"caching_sha2_password"で、ドライバが非対応のため変更
     command: --default-authentication-plugin=mysql_native_password
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    ports:
-      - 8888:80
-    volumes:
-      - "./pgadmin:/var/lib/pgadmin"
-      - "./work:/work"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: example@example.com
-      PGADMIN_DEFAULT_PASSWORD: pass
-    depends_on:
-      - db1
+  # pgadmin:
+  #   container_name: pgadmin
+  #   image: dpage/pgadmin4
+  #   ports:
+  #     - 8888:80
+  #   volumes:
+  #     - "./pgadmin:/var/lib/pgadmin"
+  #     - "./work:/work"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: example@example.com
+  #     PGADMIN_DEFAULT_PASSWORD: pass
+  #   depends_on:
+  #     - db1
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     platform: linux/x86_64
     depends_on:
       - db2
     environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOSTS=db2
-      - PMA_USER=root
-      - PMA_PASSWORD=rootpass
+      - PMA_ARBITRARY=${PMA_ARBITRARY}
+      - PMA_HOSTS=${PMA_HOSTS}
+      - PMA_USER=${PMA_USER}
+      - PMA_PASSWORD=${PMA_PASSWORD}
     ports:
       - "8889:80"
     volumes:
